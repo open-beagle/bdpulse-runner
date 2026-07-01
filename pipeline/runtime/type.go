@@ -8,9 +8,9 @@ import (
 	"context"
 	"io"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/manifest"
-	"github.com/drone/runner-go/secret"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/manifest"
+	"github.com/open-beagle/bdpulse-runner/secret"
 )
 
 type (

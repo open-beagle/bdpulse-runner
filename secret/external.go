@@ -8,11 +8,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/drone/runner-go/logger"
-	"github.com/drone/runner-go/manifest"
+	"github.com/open-beagle/bdpulse-runner/logger"
+	"github.com/open-beagle/bdpulse-runner/manifest"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/drone-go/plugin/secret"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-go/plugin/secret"
 )
 
 // External returns a new external secret provider. The

@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/client"
 )
 
 // defaultLimit is the default maximum log size in bytes.

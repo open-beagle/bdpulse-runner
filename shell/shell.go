@@ -6,7 +6,7 @@
 
 package shell
 
-import "github.com/drone/runner-go/shell/bash"
+import "github.com/open-beagle/bdpulse-runner/shell/bash"
 
 // Suffix provides the shell script suffix.
 const Suffix = ""

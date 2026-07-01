@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // State stores the pipeline state.

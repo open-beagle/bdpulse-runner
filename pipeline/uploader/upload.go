@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
-	"github.com/drone/runner-go/internal"
-	"github.com/drone/runner-go/pipeline"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/client"
+	"github.com/open-beagle/bdpulse-runner/internal"
+	"github.com/open-beagle/bdpulse-runner/pipeline"
 )
 
 var _ pipeline.Uploader = (*Upload)(nil)

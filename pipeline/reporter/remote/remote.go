@@ -10,10 +10,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/drone/runner-go/client"
-	"github.com/drone/runner-go/internal"
-	"github.com/drone/runner-go/livelog"
-	"github.com/drone/runner-go/pipeline"
+	"github.com/open-beagle/bdpulse-runner/client"
+	"github.com/open-beagle/bdpulse-runner/internal"
+	"github.com/open-beagle/bdpulse-runner/livelog"
+	"github.com/open-beagle/bdpulse-runner/pipeline"
 )
 
 var _ pipeline.Reporter = (*Remote)(nil)

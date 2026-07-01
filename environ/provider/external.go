@@ -8,8 +8,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/drone/drone-go/plugin/environ"
-	"github.com/drone/runner-go/logger"
+	"github.com/open-beagle/bdpulse-go/plugin/environ"
+	"github.com/open-beagle/bdpulse-runner/logger"
 )
 
 // MultiExternal returns a new environment provider that

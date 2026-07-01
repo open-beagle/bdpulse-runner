@@ -4,7 +4,7 @@
 
 package internal
 
-import "github.com/drone/drone-go/drone"
+import "github.com/open-beagle/bdpulse-go/drone"
 
 // CloneRepo returns a copy of the Repository.
 func CloneRepo(src *drone.Repo) *drone.Repo {

@@ -4,7 +4,7 @@
 
 package internal
 
-import "github.com/drone/drone-go/drone"
+import "github.com/open-beagle/bdpulse-go/drone"
 
 // MergeStage merges the source stage with the destination.
 func MergeStage(src, dst *drone.Stage) {

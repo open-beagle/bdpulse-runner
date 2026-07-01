@@ -7,9 +7,9 @@ package registry
 import (
 	"context"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/logger"
-	"github.com/drone/runner-go/registry/auths"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/logger"
+	"github.com/open-beagle/bdpulse-runner/registry/auths"
 )
 
 // File returns a new registry credential provider that

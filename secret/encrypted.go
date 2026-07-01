@@ -11,10 +11,10 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/drone/runner-go/logger"
-	"github.com/drone/runner-go/manifest"
+	"github.com/open-beagle/bdpulse-runner/logger"
+	"github.com/open-beagle/bdpulse-runner/manifest"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // Encrypted returns a new encrypted secret provider. The

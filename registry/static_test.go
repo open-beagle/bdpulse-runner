@@ -7,7 +7,7 @@ package registry
 import (
 	"testing"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 func TestStatic(t *testing.T) {

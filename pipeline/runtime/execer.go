@@ -8,11 +8,11 @@ import (
 	"context"
 	"sync"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/environ"
-	"github.com/drone/runner-go/livelog/extractor"
-	"github.com/drone/runner-go/logger"
-	"github.com/drone/runner-go/pipeline"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/environ"
+	"github.com/open-beagle/bdpulse-runner/livelog/extractor"
+	"github.com/open-beagle/bdpulse-runner/logger"
+	"github.com/open-beagle/bdpulse-runner/pipeline"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/natessilva/dag"

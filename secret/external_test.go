@@ -9,9 +9,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/drone-go/plugin/secret"
-	"github.com/drone/runner-go/manifest"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-go/plugin/secret"
+	"github.com/open-beagle/bdpulse-runner/manifest"
 )
 
 func TestExternal(t *testing.T) {

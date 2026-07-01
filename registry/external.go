@@ -8,9 +8,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/drone-go/plugin/registry"
-	"github.com/drone/runner-go/logger"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-go/plugin/registry"
+	"github.com/open-beagle/bdpulse-runner/logger"
 )
 
 // External returns a new external registry credentials

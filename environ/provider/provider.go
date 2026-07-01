@@ -9,7 +9,7 @@ package provider
 import (
 	"context"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // Request provides arguments for requesting a environment

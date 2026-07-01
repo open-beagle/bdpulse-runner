@@ -11,9 +11,9 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/drone/drone-go/drone"
-	hook "github.com/drone/runner-go/logger/history"
-	"github.com/drone/runner-go/pipeline/reporter/history"
+	"github.com/open-beagle/bdpulse-go/drone"
+	hook "github.com/open-beagle/bdpulse-runner/logger/history"
+	"github.com/open-beagle/bdpulse-runner/pipeline/reporter/history"
 )
 
 // HandleHealth returns a http.HandlerFunc that returns a 200

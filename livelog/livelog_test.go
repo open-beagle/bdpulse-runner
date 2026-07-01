@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/client"
 
 	"github.com/google/go-cmp/cmp"
 )

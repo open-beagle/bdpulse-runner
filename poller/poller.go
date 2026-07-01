@@ -8,9 +8,9 @@ import (
 	"context"
 	"sync"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/client"
-	"github.com/drone/runner-go/logger"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/client"
+	"github.com/open-beagle/bdpulse-runner/logger"
 )
 
 var noContext = context.Background()

@@ -17,8 +17,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/logger"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/logger"
 )
 
 const (

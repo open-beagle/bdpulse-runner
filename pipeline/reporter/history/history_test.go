@@ -8,8 +8,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/runner-go/pipeline"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-runner/pipeline"
 
 	"github.com/google/go-cmp/cmp"
 )

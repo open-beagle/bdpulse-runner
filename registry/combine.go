@@ -7,7 +7,7 @@ package registry
 import (
 	"context"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // Combine returns a new combined registry provider, capable of

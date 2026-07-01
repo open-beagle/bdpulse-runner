@@ -8,9 +8,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/drone/runner-go/logger"
+	"github.com/open-beagle/bdpulse-runner/logger"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // Static returns a new static secret provider. The static

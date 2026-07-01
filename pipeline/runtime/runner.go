@@ -11,15 +11,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/drone/runner-go/client"
-	"github.com/drone/runner-go/environ"
-	"github.com/drone/runner-go/logger"
-	"github.com/drone/runner-go/manifest"
-	"github.com/drone/runner-go/pipeline"
-	"github.com/drone/runner-go/secret"
+	"github.com/open-beagle/bdpulse-runner/client"
+	"github.com/open-beagle/bdpulse-runner/environ"
+	"github.com/open-beagle/bdpulse-runner/logger"
+	"github.com/open-beagle/bdpulse-runner/manifest"
+	"github.com/open-beagle/bdpulse-runner/pipeline"
+	"github.com/open-beagle/bdpulse-runner/secret"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/envsubst"
+	"github.com/open-beagle/bdpulse-go/drone"
+	"github.com/open-beagle/bdpulse-commons/envsubst"
 )
 
 var noContext = context.Background()

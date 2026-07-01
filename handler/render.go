@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/drone/runner-go/handler/template"
+	"github.com/open-beagle/bdpulse-runner/handler/template"
 )
 
 // renderJSON writes the json-encoded representation of v to

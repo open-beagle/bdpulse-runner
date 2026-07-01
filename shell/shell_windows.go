@@ -6,7 +6,7 @@
 
 package shell
 
-import "github.com/drone/runner-go/shell/powershell"
+import "github.com/open-beagle/bdpulse-runner/shell/powershell"
 
 // Suffix provides the shell script suffix.
 const Suffix = ".ps1"

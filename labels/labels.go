@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/drone/drone-go/drone"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 // now returns the current time.
