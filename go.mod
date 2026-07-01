@@ -8,10 +8,11 @@ require (
 	github.com/buildkite/yaml v2.1.0+incompatible
 	github.com/coreos/go-semver v0.3.1
 	github.com/docker/go-units v0.4.0
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/natessilva/dag v0.0.0-20180124060714-7194b8dcc5c4
-	github.com/open-beagle/bdpulse-go v1.7.1
+	github.com/open-beagle/bdpulse-commons v1.0.0
+	github.com/open-beagle/bdpulse-go v1.0.0
 	github.com/sirupsen/logrus v1.9.4
 	golang.org/x/crypto v0.45.0
 	golang.org/x/sync v0.18.0
