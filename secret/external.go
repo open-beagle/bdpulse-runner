@@ -19,7 +19,12 @@ import (
 // external secret provider makes an external API call to find
 // and return a named secret.
 func External(endpoint, token string, insecure bool) Provider {
-	provider := &external{}
+	return ExternalWithDefaultPath(endpoint, token, insecure, "")
+}
+
+// ExternalWithDefaultPath 创建外部 Secret Provider，并使用默认路径解析未声明的名称。
+func ExternalWithDefaultPath(endpoint, token string, insecure bool, defaultPath string) Provider {
+	provider := &external{defaultPath: defaultPath}
 	if endpoint != "" {
 		provider.client = secret.Client(endpoint, token, insecure)
 	}
@@ -27,7 +32,8 @@ func External(endpoint, token string, insecure bool) Provider {
 }
 
 type external struct {
-	client secret.Plugin
+	client      secret.Plugin
+	defaultPath string
 }
 
 func (p *external) Find(ctx context.Context, in *Request) (*drone.Secret, error) {
@@ -39,14 +45,13 @@ func (p *external) Find(ctx context.Context, in *Request) (*drone.Secret, error)
 		WithField("name", in.Name).
 		WithField("kind", "secret")
 
-	// lookup the named secret in the manifest. If the
-	// secret does not exist, return a nil variable,
-	// allowing the next secret controller in the chain
-	// to be invoked.
 	path, name, ok := getExternal(in.Conf, in.Name)
 	if !ok {
-		logger.Trace("secret: external: no matching secret")
-		return nil, nil
+		if p.defaultPath == "" {
+			logger.Trace("secret: external: no matching secret")
+			return nil, nil
+		}
+		path, name = p.defaultPath, in.Name
 	}
 
 	// include a timeout to prevent an API call from
@@ -98,6 +103,15 @@ func getExternal(spec *manifest.Manifest, match string) (path, name string, ok b
 			continue
 		}
 		return secret.Get.Path, secret.Get.Name, true
+	}
+	return
+}
+
+func resolveExternal(spec *manifest.Manifest, match, defaultPath string) (path, name string) {
+	path, name, ok := getExternal(spec, match)
+	if !ok {
+		path = defaultPath
+		name = match
 	}
 	return
 }

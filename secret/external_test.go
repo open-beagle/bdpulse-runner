@@ -50,6 +50,13 @@ func TestExternal(t *testing.T) {
 	}
 }
 
+func TestResolveExternalUsesDefaultPath(t *testing.T) {
+	path, name := resolveExternal(&manifest.Manifest{}, "docker_password", "devops-secrets")
+	if path != "devops-secrets" || name != "docker_password" {
+		t.Fatalf("path, name = %q, %q", path, name)
+	}
+}
+
 // This test verifies that if no endpoint is configured the
 // provider exits immediately and returns a nil secret and nil
 // error.
