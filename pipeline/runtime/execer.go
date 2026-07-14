@@ -22,6 +22,7 @@ import (
 // Execer executes the pipeline.
 type Execer struct {
 	mu       sync.Mutex
+	outputs  map[string]map[string]string
 	engine   Engine
 	reporter pipeline.Reporter
 	streamer pipeline.Streamer
@@ -42,6 +43,7 @@ func NewExecer(
 		streamer: streamer,
 		engine:   engine,
 		uploader: uploader,
+		outputs:  map[string]map[string]string{},
 	}
 	if threads > 0 {
 		// optional semaphore that limits the number of steps
@@ -55,6 +57,9 @@ func NewExecer(
 // and returns an error if execution fails.
 func (e *Execer) Exec(ctx context.Context, spec Spec, state *pipeline.State) error {
 	log := logger.FromContext(ctx)
+	e.mu.Lock()
+	e.outputs = map[string]map[string]string{}
+	e.mu.Unlock()
 
 	defer func() {
 		log.Debugln("destroying the pipeline environment")
@@ -222,15 +227,17 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, ste
 	// the pipeline environment variables need to be updated to
 	// reflect the current state of the build and stage.
 	state.Lock()
-	copy.SetEnviron(
-		environ.Combine(
-			copy.GetEnviron(),
-			environ.Build(state.Build),
-			environ.Stage(state.Stage),
-			environ.Step(findStep(state, step.GetName())),
-		),
+	envs := environ.Combine(
+		copy.GetEnviron(),
+		environ.Build(state.Build),
+		environ.Stage(state.Stage),
+		environ.Step(findStep(state, step.GetName())),
 	)
 	state.Unlock()
+	if err := e.applyEnvironment(spec, step, copy, envs); err != nil {
+		state.Fail(step.GetName(), err)
+		return e.reporter.ReportStep(noContext, state, step.GetName())
+	}
 
 	// writer used to stream build logs.
 	wc := e.streamer.Stream(noContext, state, step.GetName())
@@ -276,6 +283,12 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, ste
 	}
 
 	if exited != nil {
+		if exited.ExitCode == 0 && err == nil {
+			if err := e.collectEnvironment(ctx, spec, copy); err != nil {
+				state.Fail(step.GetName(), err)
+				return e.reporter.ReportStep(noContext, state, step.GetName())
+			}
+		}
 		if exited.OOMKilled {
 			log.Debugln("received oom kill.")
 			state.Finish(step.GetName(), 137)
