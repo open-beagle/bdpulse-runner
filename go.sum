@@ -23,6 +23,8 @@ github.com/natessilva/dag v0.0.0-20180124060714-7194b8dcc5c4 h1:dnMxwus89s86tI8r
 github.com/natessilva/dag v0.0.0-20180124060714-7194b8dcc5c4/go.mod h1:cojhOHk1gbMeklOyDP2oKKLftefXoJreOQGOrXk+Z38=
 github.com/open-beagle/bdpulse-commons v1.0.0 h1:ghsjT9p4+oboORNCGYHG/kRbKOXlin7Mf5oC9YhPyDs=
 github.com/open-beagle/bdpulse-commons v1.0.0/go.mod h1:qXSpYhY/P396lGomVKLhjcFY5gEk45RKsgmIK06RbGA=
+github.com/open-beagle/bdpulse-commons v1.1.0 h1:CXNv7/VybCdl2MPGPymuDH+PYAn6RKTEs3yhcmqvRvo=
+github.com/open-beagle/bdpulse-commons v1.1.0/go.mod h1:qXSpYhY/P396lGomVKLhjcFY5gEk45RKsgmIK06RbGA=
 github.com/open-beagle/bdpulse-go v1.0.0 h1:GBbl6FsO/MpZQxXxJHO2mofiVQyeqPG6KwElDPGrbiQ=
 github.com/open-beagle/bdpulse-go v1.0.0/go.mod h1:vHaQvvmxPExe3HoKlyZh5jV2lr3eoMWE40Zqmsw1phA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

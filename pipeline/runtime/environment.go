@@ -11,6 +11,7 @@ import (
 const (
 	EnvironmentFileVariable      = "CI_ENV"
 	DroneEnvironmentFileVariable = "DRONE_ENV"
+	ScriptEnvironmentVariable    = "DRONE_SCRIPT"
 	EnvironmentFilePath          = "/tmp/awecloud-ci/env"
 	EnvironmentFilePathWindows   = "C:\\awecloud-ci\\env"
 
@@ -46,6 +47,13 @@ func (e *Execer) applyEnvironment(spec Spec, original, copy Step, envs map[strin
 			return fmt.Errorf("step %q does not support image expressions", copy.GetName())
 		}
 		step.SetImage(image)
+	}
+	if script, ok := envs[ScriptEnvironmentVariable]; ok {
+		resolved, err := resolveEnvironmentExpressions(script, envs)
+		if err != nil {
+			return fmt.Errorf("step %q script: %w", copy.GetName(), err)
+		}
+		envs[ScriptEnvironmentVariable] = resolved
 	}
 	for key, value := range envs {
 		if !strings.HasPrefix(key, "PLUGIN_") {

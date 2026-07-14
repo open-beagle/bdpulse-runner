@@ -34,8 +34,11 @@ func TestApplyEnvironmentResolvesDynamicExpression(t *testing.T) {
 	consumer := &environmentStep{
 		name:         "publish",
 		dependencies: []string{"version"},
-		environment:  map[string]string{"PLUGIN_VERSION": "${{ env.BUILD_VERSION }}"},
-		image:        "registry.example/build:${{ env.BUILD_VERSION }}",
+		environment: map[string]string{
+			"PLUGIN_VERSION":          "${{ env.BUILD_VERSION }}",
+			ScriptEnvironmentVariable: "echo ${{ env.BUILD_VERSION }}",
+		},
+		image: "registry.example/build:${{ env.BUILD_VERSION }}",
 	}
 	exec := &Execer{outputs: map[string]map[string]string{
 		"version": {"BUILD_VERSION": "v7.3.0"},
@@ -48,6 +51,9 @@ func TestApplyEnvironmentResolvesDynamicExpression(t *testing.T) {
 	}
 	if got, want := consumer.environment["PLUGIN_VERSION"], "v7.3.0"; got != want {
 		t.Fatalf("PLUGIN_VERSION = %q, want %q", got, want)
+	}
+	if got, want := consumer.environment[ScriptEnvironmentVariable], "echo v7.3.0"; got != want {
+		t.Fatalf("DRONE_SCRIPT = %q, want %q", got, want)
 	}
 }
 
