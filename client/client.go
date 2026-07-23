@@ -48,6 +48,7 @@ type (
 		Build   *drone.Build    `json:"build"`
 		Stage   *drone.Stage    `json:"stage"`
 		Config  *File           `json:"config"`
+		Task    *File           `json:"task,omitempty"`
 		Netrc   *drone.Netrc    `json:"netrc"`
 		Repo    *drone.Repo     `json:"repository"`
 		Secrets []*drone.Secret `json:"secrets"`

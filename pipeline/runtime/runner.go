@@ -18,8 +18,8 @@ import (
 	"github.com/open-beagle/bdpulse-runner/pipeline"
 	"github.com/open-beagle/bdpulse-runner/secret"
 
-	"github.com/open-beagle/bdpulse-go/drone"
 	"github.com/open-beagle/bdpulse-commons/envsubst"
+	"github.com/open-beagle/bdpulse-go/drone"
 )
 
 var noContext = context.Background()
@@ -210,19 +210,27 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	}
 
 	// parse the yaml configuration file.
-	manifest, err := manifest.ParseString(config)
+	configManifest, err := manifest.ParseString(config)
 	if err != nil {
 		log.WithError(err).Error("cannot parse configuration file")
 		state.FailAll(err)
 		return s.Reporter.ReportStage(noContext, state)
 	}
 
-	// find the named stage in the yaml configuration file.
-	resource, err := s.Lookup(stage.Name, manifest)
+	resource, selected, err := serverTask(data.Task)
 	if err != nil {
-		log.WithError(err).Error("cannot find pipeline resource")
+		log.WithError(err).Error("invalid server task")
 		state.FailAll(err)
 		return s.Reporter.ReportStage(noContext, state)
+	}
+	if !selected {
+		// Compatibility for stages created before server-side task snapshots.
+		resource, err = s.Lookup(stage.Name, configManifest)
+		if err != nil {
+			log.WithError(err).Error("cannot find pipeline resource")
+			state.FailAll(err)
+			return s.Reporter.ReportStage(noContext, state)
+		}
 	}
 
 	// lint the pipeline configuration and fail the build
@@ -243,7 +251,7 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	// representation, and then
 	args := CompilerArgs{
 		Pipeline: resource,
-		Manifest: manifest,
+		Manifest: configManifest,
 		Build:    data.Build,
 		Stage:    stage,
 		Repo:     data.Repo,
@@ -293,4 +301,18 @@ func (s *Runner) run(ctx context.Context, stage *drone.Stage, data *client.Conte
 	log.WithField("duration", stage.Stopped-stage.Started).
 		Debug("updated stage to complete")
 	return nil
+}
+
+func serverTask(file *client.File) (manifest.Resource, bool, error) {
+	if file == nil || len(file.Data) == 0 {
+		return nil, false, nil
+	}
+	task, err := manifest.ParseBytes(file.Data)
+	if err != nil {
+		return nil, true, err
+	}
+	if len(task.Resources) != 1 {
+		return nil, true, fmt.Errorf("server task contains %d resources, want 1", len(task.Resources))
+	}
+	return task.Resources[0], true, nil
 }
