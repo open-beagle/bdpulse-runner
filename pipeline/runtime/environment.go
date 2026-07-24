@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 const (
@@ -26,8 +27,17 @@ var (
 	environmentExpression = regexp.MustCompile(`\$\{\{\s*env\.([A-Za-z_][A-Za-z0-9_]*)\s*\}\}`)
 )
 
-func (e *Execer) applyEnvironment(spec Spec, original, copy Step, envs map[string]string) error {
-	dynamic, err := e.inheritedEnvironment(spec, original)
+type environmentState struct {
+	mu      sync.Mutex
+	outputs map[string]map[string]string
+}
+
+func newEnvironmentState() *environmentState {
+	return &environmentState{outputs: map[string]map[string]string{}}
+}
+
+func (e *Execer) applyEnvironment(environment *environmentState, spec Spec, original, copy Step, envs map[string]string) error {
+	dynamic, err := environment.inheritedEnvironment(spec, original)
 	if err != nil {
 		return err
 	}
@@ -69,7 +79,7 @@ func (e *Execer) applyEnvironment(spec Spec, original, copy Step, envs map[strin
 	return nil
 }
 
-func (e *Execer) collectEnvironment(ctx context.Context, spec Spec, step Step) error {
+func (e *Execer) collectEnvironment(ctx context.Context, environment *environmentState, spec Spec, step Step) error {
 	path, ok := step.GetEnviron()[EnvironmentFileVariable]
 	if !ok {
 		return nil
@@ -88,9 +98,9 @@ func (e *Execer) collectEnvironment(ctx context.Context, spec Spec, step Step) e
 	if err != nil {
 		return fmt.Errorf("step %q invalid %s: %w", step.GetName(), EnvironmentFileVariable, err)
 	}
-	e.mu.Lock()
-	e.outputs[step.GetName()] = values
-	e.mu.Unlock()
+	environment.mu.Lock()
+	environment.outputs[step.GetName()] = values
+	environment.mu.Unlock()
 	return nil
 }
 
@@ -101,7 +111,7 @@ func environmentOverrides(step Step) map[string]bool {
 	return nil
 }
 
-func (e *Execer) inheritedEnvironment(spec Spec, step Step) (map[string]string, error) {
+func (e *environmentState) inheritedEnvironment(spec Spec, step Step) (map[string]string, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 

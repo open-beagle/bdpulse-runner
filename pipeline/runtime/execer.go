@@ -6,7 +6,6 @@ package runtime
 
 import (
 	"context"
-	"sync"
 
 	"github.com/open-beagle/bdpulse-go/drone"
 	"github.com/open-beagle/bdpulse-runner/environ"
@@ -21,8 +20,6 @@ import (
 
 // Execer executes the pipeline.
 type Execer struct {
-	mu       sync.Mutex
-	outputs  map[string]map[string]string
 	engine   Engine
 	reporter pipeline.Reporter
 	streamer pipeline.Streamer
@@ -43,7 +40,6 @@ func NewExecer(
 		streamer: streamer,
 		engine:   engine,
 		uploader: uploader,
-		outputs:  map[string]map[string]string{},
 	}
 	if threads > 0 {
 		// optional semaphore that limits the number of steps
@@ -57,9 +53,7 @@ func NewExecer(
 // and returns an error if execution fails.
 func (e *Execer) Exec(ctx context.Context, spec Spec, state *pipeline.State) error {
 	log := logger.FromContext(ctx)
-	e.mu.Lock()
-	e.outputs = map[string]map[string]string{}
-	e.mu.Unlock()
+	environment := newEnvironmentState()
 
 	defer func() {
 		log.Debugln("destroying the pipeline environment")
@@ -88,7 +82,7 @@ func (e *Execer) Exec(ctx context.Context, spec Spec, state *pipeline.State) err
 	for i := 0; i < spec.StepLen(); i++ {
 		step := spec.StepAt(i)
 		d.AddVertex(step.GetName(), func() error {
-			err := e.exec(ctx, state, spec, step)
+			err := e.exec(ctx, state, spec, step, environment)
 			// if the step is configured to fast fail the
 			// pipeline, and if the step returned a non-zero
 			// exit code, cancel the entire pipeline.
@@ -143,7 +137,7 @@ func (e *Execer) Exec(ctx context.Context, spec Spec, state *pipeline.State) err
 	return result
 }
 
-func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, step Step) error {
+func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, step Step, environment *environmentState) error {
 	var result error
 
 	select {
@@ -234,7 +228,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, ste
 		environ.Step(findStep(state, step.GetName())),
 	)
 	state.Unlock()
-	if err := e.applyEnvironment(spec, step, copy, envs); err != nil {
+	if err := e.applyEnvironment(environment, spec, step, copy, envs); err != nil {
 		state.Fail(step.GetName(), err)
 		return e.reporter.ReportStep(noContext, state, step.GetName())
 	}
@@ -284,7 +278,7 @@ func (e *Execer) exec(ctx context.Context, state *pipeline.State, spec Spec, ste
 
 	if exited != nil {
 		if exited.ExitCode == 0 && err == nil {
-			if err := e.collectEnvironment(ctx, spec, copy); err != nil {
+			if err := e.collectEnvironment(ctx, environment, spec, copy); err != nil {
 				state.Fail(step.GetName(), err)
 				return e.reporter.ReportStep(noContext, state, step.GetName())
 			}

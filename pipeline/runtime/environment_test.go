@@ -19,11 +19,11 @@ func TestInheritedEnvironmentRejectsConflict(t *testing.T) {
 	left := &environmentStep{name: "left"}
 	right := &environmentStep{name: "right"}
 	consumer := &environmentStep{name: "publish", dependencies: []string{"left", "right"}}
-	exec := &Execer{outputs: map[string]map[string]string{
+	environment := &environmentState{outputs: map[string]map[string]string{
 		"left":  {"BUILD_VERSION": "v7.3.0"},
 		"right": {"BUILD_VERSION": "v7.3.1"},
 	}}
-	_, err := exec.inheritedEnvironment(environmentSpec{left, right, consumer}, consumer)
+	_, err := environment.inheritedEnvironment(environmentSpec{left, right, consumer}, consumer)
 	if err == nil || !strings.Contains(err.Error(), "conflicting") {
 		t.Fatalf("error = %v, want conflict error", err)
 	}
@@ -40,10 +40,11 @@ func TestApplyEnvironmentResolvesDynamicExpression(t *testing.T) {
 		},
 		image: "registry.example/build:${{ env.BUILD_VERSION }}",
 	}
-	exec := &Execer{outputs: map[string]map[string]string{
+	environment := &environmentState{outputs: map[string]map[string]string{
 		"version": {"BUILD_VERSION": "v7.3.0"},
 	}}
-	if err := exec.applyEnvironment(environmentSpec{producer, consumer}, consumer, consumer, consumer.environment); err != nil {
+	exec := &Execer{}
+	if err := exec.applyEnvironment(environment, environmentSpec{producer, consumer}, consumer, consumer, consumer.environment); err != nil {
 		t.Fatal(err)
 	}
 	if got, want := consumer.image, "registry.example/build:v7.3.0"; got != want {
