@@ -47,7 +47,7 @@ func New(client client.Client, id int64) *Writer {
 		id:       id,
 		now:      time.Now(),
 		limit:    defaultLimit,
-		interval: time.Second,
+		interval: 100 * time.Millisecond,
 		close:    make(chan struct{}),
 		ready:    make(chan struct{}, 1),
 	}
@@ -94,12 +94,28 @@ func (b *Writer) Write(p []byte) (n int, err error) {
 		b.Unlock()
 	}
 
-	select {
-	case b.ready <- struct{}{}:
-	default:
+	if b.pendingSize() >= 65536 {
+		_ = b.flush()
+	} else {
+		select {
+		case b.ready <- struct{}{}:
+		default:
+		}
 	}
 
 	return len(p), nil
+}
+
+func (b *Writer) pendingSize() int {
+	b.Lock()
+	defer b.Unlock()
+	n := 0
+	for _, l := range b.pending {
+		if l != nil {
+			n += len(l.Message)
+		}
+	}
+	return n
 }
 
 // Close closes the writer and uploads the full contents to
